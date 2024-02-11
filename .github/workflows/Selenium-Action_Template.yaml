@@ -1,9 +1,12 @@
 name: Run Selenium On GitHub Action
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checking out repo
         uses: actions/checkout@v3
@@ -16,14 +19,13 @@ jobs:
       - name: Removing previous chrome instances on runner 
         run: sudo apt purge google-chrome-stable  
         
-       # Need to fetch reqs if needed
       - name: Installing all necessary packages
-        run: pip install chromedriver-autoinstaller selenium pyvirtualdisplay
+        run: pip install requests chromedriver-autoinstaller selenium pyvirtualdisplay pyshorteners
       - name: Install xvfb
         run: sudo apt-get install xvfb
 
       - name: Running the Python script
-        run: python Selenium-Template.py
+        run: python scraper.py
         
       - name: Commit and Push The Results From Python Selenium Action
         run: |
